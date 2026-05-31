@@ -2,29 +2,6 @@
 
 #include <QColorSpace>
 
-template<std::size_t length>
-std::array<uint16_t, length> create_rec601_transfer()
-{
-    std::array<uint16_t, length> transfer {};
-    double                       luma_scale = static_cast<double>(length) - 1.0;
-
-    for (int i = 0; i < length; i++)
-    {
-        double luma = static_cast<double>(i) / luma_scale;
-
-        double encoded = 0.0;
-        if (luma < 0.018) { encoded = luma * 4.5; }
-        else
-        {
-            encoded = 1.099 * std::pow(luma, 0.45) - 0.099;
-        }
-
-        transfer[i] = static_cast<uint16_t>(encoded * 65535.0);
-    }
-
-    return transfer;
-}
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     this->resize(640, 480);
@@ -37,10 +14,29 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (this->m_loaded_project != nullptr && this->m_loaded_project->has_changed())
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(
+          this,
+          "Save?",
+          "Would you like to save your changes before exiting?",
+          QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+        if (reply == QMessageBox::Cancel)
+        {
+            event->ignore();
+            return;
+        }
+    }
+    event->accept();
+}
+
 void MainWindow::createMenuBar()
 {
     QAction *newAct = new QAction(this);
-    newAct->setShortcut(QKeySequence::New);
     newAct->setText(tr("Create a New Project"));
 
     connect(newAct, &QAction::triggered, this, &MainWindow::newProject);
@@ -50,4 +46,28 @@ void MainWindow::createMenuBar()
 }
 
 void MainWindow::newProject()
-{ qInfo("get fucked ha lol"); }
+{
+    QStringList   mime_types;
+    QMimeDatabase database;
+    for (const QMimeType &type : database.allMimeTypes())
+        if (type.name().startsWith("video/")) mime_types.append(type.name());
+
+    QFileDialog dialog(this, tr("Open Video File"));
+    dialog.setMimeTypeFilters(mime_types);
+    if (!dialog.exec()) { return; }
+
+    Project *ptr = new Project();
+    ptr->set_video_path(dialog.selectedFiles()[0]);
+    std::swap(this->m_loaded_project, ptr);
+
+    if (ptr != nullptr)
+    {
+        // TODO: Throw "Do you want to save?" messagebox
+        // if (this->m_loaded_project->has_changed())
+
+        // Clean state
+        delete ptr;
+    }
+
+    qInfo("New Project Created!");
+}

@@ -12,6 +12,7 @@ find_package(Qt6 REQUIRED
 set(SOURCES
     src/main.cpp
     src/MainWindow.cpp
+    src/Project.cpp
 )
 add_executable(ivtc_tool ${SOURCES})
 target_include_directories(ivtc_tool PRIVATE "src")
