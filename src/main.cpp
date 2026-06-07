@@ -1,16 +1,21 @@
 #include <QtLogging>
 #include <QtTranslation>
 #include <QtWidgets>
+#include <qcoreapplication.h>
 
 #include "MainWindow.hpp"
 
-int main(int argc, char *argv[]) {
-  qInfo("Hello World!");
+int main(int argc, char *argv[])
+{
+    qInfo("Hello World!");
 
-  QApplication app(argc, argv);
+    QApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("GLStudios");
+    QCoreApplication::setOrganizationDomain("glstudios.org");
+    QCoreApplication::setApplicationName("ivtc_tool");
 
-  MainWindow window;
-  window.show();
+    MainWindow window;
+    window.show();
 
-  return app.exec();
+    return app.exec();
 }
