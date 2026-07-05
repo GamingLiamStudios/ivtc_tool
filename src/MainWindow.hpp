@@ -1,23 +1,23 @@
 #pragma once
 
+#include <QtCore>
 #include <QtWidgets>
-#include <qtmetamacros.h>
-#include "Project.hpp"
+#include <QtMultimedia>
+
+#include "ProjectManager.hpp"
+#include <QVideoWidget>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     // Q_PROPERTY(Project *loadedProject MEMBER m_loaded_project NOTIFY projectChanged)
-    Q_PROPERTY(QImage visibleFrame MEMBER m_visible_frame NOTIFY frameChanged)
+    // Q_PROPERTY(QImage visibleFrame MEMBER m_visible_frame NOTIFY frameChanged)
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-signals:
-    void projectChanged(const Project *newProject);
-    void frameChanged();
+    // void frameChanged();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -32,11 +32,9 @@ private:
     void loadSettings();
     void saveSettings();
 
-    void paintColorBars();
-
 private:
-    Project *m_loaded_project = nullptr;
+    ProjectManager m_projectManager;
 
-    QGraphicsScene *m_scene;
-    QImage          m_visible_frame;
+    // QVideoWidget *m_video_widget;
+    QVideoSink *m_videoSink;
 };

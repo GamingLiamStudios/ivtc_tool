@@ -100,7 +100,8 @@ QColor YPbPr::toQColor(Matrix matrix)
     {
     case Matrix::Linear: return QColor::fromRgbF(Y, Pb, Pr);
     case Matrix::BT601: return toRGB(0.299, 0.587, 0.114);
-    case Matrix::BT709: return toRGB(0.2126, 0.7152, 0.0722);
+    case Matrix::BT709:
+    default: return toRGB(0.2126, 0.7152, 0.0722);
     }
 }
 

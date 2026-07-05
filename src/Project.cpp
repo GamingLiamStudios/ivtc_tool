@@ -4,7 +4,7 @@
 #include <QException>
 #include "ColorSpace.hpp"
 
-Project::Project(const QString &video_path) : m_video_path(video_path)
+Project::Project(const QString &video_path) : m_videoPath(video_path)
 {
 }
 
@@ -28,7 +28,11 @@ void Project::setTimestamp(int64_t timestamp)
 }
 
 bool Project::has_changed()
-{ return this->m_changed; }
+{
+    return this->m_changed;
+}
 
 QColorSpace Project::colorspace()
-{ return generateColorSpace(this->m_video_primaries, this->m_video_transfer); }
+{
+    return generateColorSpace(this->m_videoPrimaries, this->m_videoTransfer);
+}

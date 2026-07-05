@@ -3,11 +3,12 @@ project(ivtc_tool LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(FFMPEG_ROOT "Root of installed FFmpeg library")
 
 find_package(Qt6 REQUIRED
-    COMPONENTS Core Gui Widgets
+    COMPONENTS Core Gui Widgets Multimedia MultimediaWidgets
 )
 
 set(SOURCES
@@ -22,6 +23,8 @@ target_link_libraries(ivtc_tool PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
+    Qt6::Multimedia
+    Qt6::MultimediaWidgets
 )
 
 # Link FFmpeg
